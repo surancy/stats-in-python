@@ -3,11 +3,62 @@ The histogram using sns.set() default setting had ten bins. This is the default 
 The "square root rule" is a commonly-used rule of thumb for choosing number of bins: choose the number of bins to be the square root of the number of samples. 
 
 ```python
+# Histogram
 n_bins = np.sqrt(len(data))
 plt.hist(data,bins = n_bins)
 plt.xlabel = ('petal length (cm)') # don't forget the units!
 plt.ylabel = ('counts')
 ```
+
+"binning bias": the visualization can look very different based on our choise of bins. We can use the bee swarm plot instead to show the data more accurately.
+```python
+# swarm plot
+sns.swarmplot(x = 'species', y = 'petal length (cm)', data = df)
+
+# Label the axes
+plt.xlabel('Species')
+plt.ylabel('petal length (cm)')
+
+# Show the plot
+plt.show()
+```
+
+Swarm plot is not the best option when we plot a larger amount of data, e.g. all of our data - many overlapping points. Obfuscating data. 
+**Emperical Cumulative Distribution Functions (ECDF)**. I think this is always a good way to start getting a sense of your data.
+
+The x values are the sorted data. Use the np.sort() function to perform the sorting.
+The  data of the ECDF go from 1/n to 1 in equally spaced increments. You can construct this using np.arange(). Remember, however, that the end value in np.arange() is not inclusive. Therefore, np.arange() will need to go from 1 to n+1. Be sure to divide this by n.
+
+```python
+def ecdf(data):
+    """Compute ECDF for a one-dimensional array of measurements."""
+    # x-data for the ECDF: x
+    x = np.sort(data)
+
+    # y-data for the ECDF: y
+    y = np.arange(1,len(data)+1)/len(data)
+
+    return x, y
+
+# Compute ECDFs
+x_set, y_set = ecdf(setosa_petal_length)
+x_vers,y_vers = ecdf(versicolor_petal_length)
+x_virg,y_virg = ecdf(virginica_petal_length)
+
+# Plot all ECDFs on the same plot
+plt.plot(x_set,y_set, marker = '.', linestyle = 'none')
+plt.plot(x_vers,y_vers, marker = '.', linestyle = 'none')
+plt.plot(x_virg,y_virg, marker = '.', linestyle = 'none')
+
+# Annotate the plot
+plt.legend(('setosa', 'versicolor', 'virginica'), loc='lower right')
+_ = plt.xlabel('petal length (cm)')
+_ = plt.ylabel('ECDF')
+
+# Display the plot
+plt.show()
+```
+
 
 # Quantitative EDA
 
